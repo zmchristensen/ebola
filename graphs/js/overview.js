@@ -1,4 +1,9 @@
 $(document).ready(function () {
+    var casesColor = "#339",
+        deathsColor = "#930";
+
+    var contentWidth = 960;
+
     $('#reset').click(function () {
         dc.filterAll();
         dc.redrawAll();
@@ -75,24 +80,28 @@ $(document).ready(function () {
         var minDay = dayDimension.bottom(1)[0].Date;
         var maxDay = dayDimension.top(1)[0].Date;
 
-        var height = 198;
+        var height = 198,
+            shortHeight = 98;
+
+        var lineChartWidth = contentWidth / 2;
+        var rowChartWidth = contentWidth / 2;
 
         d3.json("locations.geojson", function (countriesJSON) {
 
           //mortality %
           mortality
             .valueAccessor(function(d) { return typeGroup.all()[1].value / typeGroup.all()[0].value; })
-            .html({ some:"<span style=\"color:#555555; font-size: 26px;\">Mortality: </span><br><span style=\"color:#990000; font-size: 46px;\">%number</span>" })
+            .html({ some:"<span style=\"color:#339; font-size: 26px;\">Mortality</span><br><span style=\"color:#930; font-size: 46px;\">%number</span>" })
             .formatNumber(d3.format("%"))
             .group(typeGroup);
 
           //case deaths row chart
           casesDeathsRowChart
-            .width(200).height(height)
-            .margins({top: 20, left: 10, right: 10, bottom: 20})
+            .width(rowChartWidth - 22).height(shortHeight)
+            .margins({top: 10, left: 10, right: 10, bottom: 20})
             .dimension(typeDimension)
             .group(typeGroup)
-            .ordinalColors(['#555555', '#990000'])
+            .ordinalColors([casesColor, deathsColor])
             .label(function (d) {
               if (casesDeathsRowChart.hasFilter() && !casesDeathsRowChart.hasFilter(d.key)) {
                 return d.key + " (0)";
@@ -104,12 +113,12 @@ $(document).ready(function () {
               }
             })
             .elasticX(true)
-            .labelOffsetY(40)
-            .xAxis().ticks(4);
+            .labelOffsetY(17.5)
+            .xAxis().ticks(3);
 
           //map
           map
-            .width(928).height(500)
+            .width(contentWidth - 2).height(500)
             .dimension(countryDimension)
             .group(countryGroup)
             .projection(d3.geo.mercator()
@@ -128,7 +137,7 @@ $(document).ready(function () {
 
           //case deaths over time
           casesDeathsChart
-            .width(698).height(197)
+            .width(lineChartWidth).height(197)
             .x(d3.time.scale().domain([minDay,maxDay]))
             .yAxisLabel("Total")
             .elasticY(true)
@@ -137,20 +146,21 @@ $(document).ready(function () {
             .compose([
                 dc.lineChart(casesDeathsChart)
                     .dimension(dayDimension)
-                    .colors('#990000')
-                    .renderArea(false)
+                    .colors(deathsColor)
+                    .renderArea(true)
                     .group(deathsGroup, "Deaths Per Day"),
                 dc.lineChart(casesDeathsChart)
                     .dimension(dayDimension)
-                    .colors('#555555')
+                    .colors(casesColor)
                     .group(casesGroup, "Cases Per Day")
-                    .renderArea(false)
+                    .renderArea(true)
             ])
-            .brushOn(false);
+            .brushOn(true)
+            .mouseZoomable(true);
 
           //cumulative case deaths over time
           cumulative
-            .width(698).height(197)
+            .width(lineChartWidth).height(197)
             .x(d3.time.scale().domain([minDay,maxDay]))
             .yAxisLabel("Total")
             .elasticY(true)
@@ -159,14 +169,14 @@ $(document).ready(function () {
             .compose([
                 dc.lineChart(casesDeathsChart)
                     .dimension(dayDimension)
-                    .colors('#990000')
-                    .renderArea(false)
+                    .colors(deathsColor)
+                    .renderArea(true)
                     .group(cumulativeDeathsGroup, "Cumulative Deaths"),
                 dc.lineChart(casesDeathsChart)
                     .dimension(dayDimension)
-                    .colors('#555555')
+                    .colors(casesColor)
                     .group(cumulativeCaseGroup, "Cumulative Cases")
-                    .renderArea(false)
+                    .renderArea(true)
             ])
             .brushOn(false);
 
