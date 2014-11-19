@@ -92,9 +92,13 @@ cursor: pointer;
 .chart {
   background-color: rgba(255, 255, 255, 0.2);
   border: solid lightgrey 0px;
-  text-align: center;
   margin-bottom: 0px;
   padding: 10px;
+}
+
+.chart-filter {
+  margin-left: 5px;
+  margin-top: 12px;
 }
 
 .small-chart {
@@ -115,6 +119,15 @@ cursor: pointer;
   fill: #eee;
 }
 
+#map .row {
+  margin-left: 10px;
+}
+
+#map .chart-filter {
+  margin-top: 14px !important;
+}
+
 #mortality {
   margin-top: 44px;
+  text-align: center;
 }
