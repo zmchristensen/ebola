@@ -179,17 +179,17 @@ d3.csv("graph_data.csv", function (error, data) {
         ])
         .brushOn(false);
 
-        //data table
-        datatable
-          .dimension(dayDimension)
-          .group(function(d) {return d.Day;})
-          .columns([
-              function(d) {return d.Day;},
-              function(d) {return d.Country;},
-              function(d) {return d.Type;},
-              function(d) {return d.Value;},
-              function(d) {return d.TotalValue;}
-          ]);
+      //data table
+      datatable
+        .dimension(dayDimension)
+        .group(function(d) {return d.Day;})
+        .columns([
+            function(d) {return d.Day;},
+            function(d) {return d.Country;},
+            function(d) {return d.Type;},
+            function(d) {return d.Value;},
+            function(d) {return d.TotalValue;}
+        ]);
 
     dc.renderAll();
   });
