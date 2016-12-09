@@ -6,7 +6,7 @@ var fs = require("fs");
 var writeFile = true;
 var toFile = "../html/graph_data.csv";
 
-var file = "../../country_timeseries.csv";
+var file = "../../../country_timeseries.csv";
 var data = readFileIntoArray(file);
 
 if (data.length > 0) {
